@@ -6,9 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gustavoeyros/golang-project/src/configurations/logger"
 	"github.com/gustavoeyros/golang-project/src/configurations/validation"
-	"github.com/gustavoeyros/golang-project/src/models/request"
-	"github.com/gustavoeyros/golang-project/src/models/response"
+	"github.com/gustavoeyros/golang-project/src/controllers/models/request"
+	"github.com/gustavoeyros/golang-project/src/model"
 	"go.uber.org/zap/zapcore"
+)
+
+var (
+	UserDomainInterface model.UserDomainInterface
 )
 
 func CreateUser(c *gin.Context) {
@@ -18,8 +22,8 @@ func CreateUser(c *gin.Context) {
 			String: "createUser",
 		},
 	)
-	var UserRequest request.UserRequest
-	if err := c.ShouldBindJSON(&UserRequest); err != nil {
+	var userRequest request.UserRequest
+	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		logger.Error("Error trying to validate user info", err,
 			zapcore.Field{
 				Key:    "journey",
@@ -30,17 +34,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	response := response.UserResponse{
-		ID:    "teste",
-		Email: UserRequest.Email,
-		Name:  UserRequest.Name,
-		Age:   UserRequest.Age,
+	domain := model.NewUserDomain(userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(err.Code, err)
+		return
 	}
 
-	logger.Info("User created successfully",
-		zapcore.Field{
-			Key:    "journey",
-			String: "createUser",
-		})
-	c.JSON(http.StatusOK, response)
+	logger.Info("User created successfully", zapcore.Field{
+		Key:    "journey",
+		String: "createUser",
+	})
+	c.String(http.StatusOK, "")
 }
