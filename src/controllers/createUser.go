@@ -8,7 +8,7 @@ import (
 	"github.com/gustavoeyros/golang-project/src/configurations/validation"
 	"github.com/gustavoeyros/golang-project/src/controllers/models/request"
 	"github.com/gustavoeyros/golang-project/src/model"
-	"go.uber.org/zap/zapcore"
+	"go.uber.org/zap"
 )
 
 var (
@@ -17,18 +17,12 @@ var (
 
 func CreateUser(c *gin.Context) {
 	logger.Info("Init CreateUser controller",
-		zapcore.Field{
-			Key:    "journey",
-			String: "createUser",
-		},
+		zap.String("journey", "createUser"),
 	)
 	var userRequest request.UserRequest
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		logger.Error("Error trying to validate user info", err,
-			zapcore.Field{
-				Key:    "journey",
-				String: "createUser",
-			})
+			zap.String("journey", "createUser"))
 		errRest := validation.ValidateError(err)
 		c.JSON(errRest.Code, errRest)
 		return
@@ -45,9 +39,6 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	logger.Info("User created successfully", zapcore.Field{
-		Key:    "journey",
-		String: "createUser",
-	})
+	logger.Info("User created successfully", zap.String("journey", "createUser"))
 	c.String(http.StatusOK, "")
 }
