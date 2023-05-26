@@ -1,16 +1,17 @@
-package model
+package service
 
 import (
 	"fmt"
 
 	"github.com/gustavoeyros/golang-project/src/configurations/logger"
 	"github.com/gustavoeyros/golang-project/src/configurations/rest_err"
+	"github.com/gustavoeyros/golang-project/src/model"
 	"go.uber.org/zap"
 )
 
-func (ud *UserDomain) CreateUser() *rest_err.RestErr {
+func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) *rest_err.RestErr {
 	logger.Info("Init createUser model", zap.String("journey", "createUser"))
-	ud.EncryptPassowrd()
+	userDomain.EncryptPassowrd()
 
 	fmt.Println(ud)
 	return nil
