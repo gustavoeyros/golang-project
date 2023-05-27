@@ -5,10 +5,10 @@ import (
 	"github.com/gustavoeyros/golang-project/src/controllers"
 )
 
-func InitRoutes(r *gin.RouterGroup) {
-	r.GET("/getUserById/:userId", controllers.FindUserByID)
-	r.GET("/getUserByEmail/:userEmail", controllers.FindUserByEmail)
-	r.POST("/createUser", controllers.CreateUser)
-	r.PUT("/updateUser/:userId", controllers.UpdateUser)
-	r.DELETE("/deleteUser/:userId", controllers.DeleteUser)
+func InitRoutes(r *gin.RouterGroup, userController controllers.UserControllerInterface) {
+	r.GET("/getUserById/:userId", userController.FindUserByID)
+	r.GET("/getUserByEmail/:userEmail", userController.FindUserByEmail)
+	r.POST("/createUser", userController.CreateUser)
+	r.PUT("/updateUser/:userId", userController.UpdateUser)
+	r.DELETE("/deleteUser/:userId", userController.DeleteUser)
 }
