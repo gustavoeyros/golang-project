@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gustavoeyros/golang-project/src/configurations/database/mongodb"
 	"github.com/gustavoeyros/golang-project/src/configurations/logger"
 	"github.com/gustavoeyros/golang-project/src/controllers"
 	"github.com/gustavoeyros/golang-project/src/controllers/routes"
@@ -17,6 +18,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	mongodb.InitConnection()
 
 	service := service.NewUserDomainService()
 	userController := controllers.NewUserControllerInterface(service)
